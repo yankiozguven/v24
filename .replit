@@ -1,0 +1,29 @@
+run = "npm run dev"
+entrypoint = "src/main.jsx"
+
+hidden = [".config", "tsconfig.json", "vite.config.js", ".gitignore"]
+
+[nix]
+channel = "stable-22_11"
+
+[env]
+PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
+npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
+NODE_OPTIONS = "--no-warnings"
+
+[packager]
+language = "nodejs"
+  
+[languages.javascript]
+pattern = "**/{*.js,*.jsx,*.ts,*.tsx}"
+ 
+[languages.javascript.languageServer]
+start = ["typescript-language-server", "--stdio"]
+
+[server]
+port = 3000
+host = "0.0.0.0" 
+
+[[ports]]
+localPort = 3000
+externalPort = 80
