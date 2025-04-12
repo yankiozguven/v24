@@ -542,7 +542,7 @@ export function VercelV0Chat() {
                                 }
                             }}
                             className={cn(
-                                "px-1.5 py-1.5 rounded-lg text-sm transition-colors border border-[#f96815] hover:border-[#f96815]/80 hover:bg-[#fdf2e4] flex items-center justify-between gap-1",
+                                "px-1.5 py-1.5 rounded-lg text-sm transition-colors border border-[#f96815] hover:border-[#f96815]/80 hover:bg-[#f96815] flex items-center justify-between gap-1",
                                 value.trim()
                                     ? "bg-[#fdf2e4] text-[#f96815]"
                                     : "text-black"
