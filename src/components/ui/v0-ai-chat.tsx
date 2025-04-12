@@ -90,7 +90,7 @@ export function VercelV0Chat() {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setShowDropdown(false);
             }
-            
+
             if (animationRef.current && !animationRef.current.contains(event.target as Node) && showAnimation) {
                 setShowAnimation(false);
                 setAnimationStep(0);
@@ -117,27 +117,27 @@ export function VercelV0Chat() {
     // Bu fonksiyon, girilen prompt'a göre geliştirilmiş öneriler oluşturur
     const generateEnhancedSuggestions = (input: string): string[] => {
         const lowerInput = input.toLowerCase();
-        
+
         // Restoran aramaları için öneriler
         if (lowerInput.includes("restoran") || lowerInput.includes("mekan") || 
             lowerInput.includes("yemek") || lowerInput.includes("kafe") || 
             lowerInput.includes("cafe") || lowerInput.includes("steakhouse") ||
             lowerInput.includes("burger") || lowerInput.includes("pizza") ||
             lowerInput.includes("kebapçı") || lowerInput.includes("kebap")) {
-            
+
             // Lokasyon tespiti
             const locationRegex = /(beşiktaş|kadıköy|şişli|beyoğlu|taksim|nişantaşı|üsküdar|bebek|etiler|levent|ataşehir|sarıyer|maslak|kartal|maltepe)/i;
             const locationMatch = input.match(locationRegex);
             const location = locationMatch ? locationMatch[0] : null;
-            
+
             // Yemek türü tespiti
             const foodTypeRegex = /(steak|burger|pizza|türk|italian|italyan|deniz|seafood|balık|kahvaltı|brunch|çin|japon|sushi|kebap|döner|köfte|vejeteryan|vegan|kebapçı)/i;
             const foodMatch = input.match(foodTypeRegex);
             const foodType = foodMatch ? foodMatch[0] : null;
-            
+
             // Özel öneriler oluştur
             const suggestions: string[] = [];
-            
+
             if (location && foodType) {
                 // Yemek türüne göre özelleştirilmiş öneriler
                 if (foodType.toLowerCase().includes("kebap") || foodType.toLowerCase().includes("kebapçı")) {
@@ -215,46 +215,46 @@ export function VercelV0Chat() {
                     suggestions.push(`Romantik akşam yemeği için ideal ${input} restoranları`);
                 }
             }
-            
+
             // Steakhouse özel durumu
             if (lowerInput.includes("steakhouse") || lowerInput.includes("steak")) {
                 suggestions.push("Dry-aged et servisi yapan ve et kalitesiyle bilinen steakhouse'lar");
                 suggestions.push("Steak yanında özel soslar ve garnitürler sunan restoranlar");
                 suggestions.push("Wagyu ve Angus gibi özel et çeşitleri sunan lüks steakhouse'lar");
-                
+
                 if (location) {
                     suggestions.push(`${location} bölgesinde ithal et menüsü olan lüks steakhouse'lar`);
                     suggestions.push(`${location}'da şömine başında yemek yiyebileceğiniz steakhouse'lar`);
                 }
             }
-            
+
             // Burger özel durumu
             if (lowerInput.includes("burger")) {
                 suggestions.push("El yapımı burger köfteleri ve özel ekmekleriyle bilinen restoranlar");
                 suggestions.push("Gurme burger menüleri ve eşsiz sos çeşitleri sunan yerler");
                 suggestions.push("Sınırsız patates ikramı yapan burger restoranları");
-                
+
                 if (location) {
                     suggestions.push(`${location}'da smash burger servisi yapan popüler mekanlar`);
                     suggestions.push(`${location} bölgesinde craft bira eşliğinde burger servisi yapan yerler`);
                 }
             }
-            
+
             // Türk mutfağı özel durumu
             if (lowerInput.includes("türk") || lowerInput.includes("osmanlı")) {
                 suggestions.push("Geleneksel Osmanlı saray mutfağından tarifleri sunan restoranlar");
                 suggestions.push("Bölgesel Türk mutfaklarını bir arada sunan fusion restoranlar");
                 suggestions.push("Tarihi mekanlarda otantik Türk mutfağı deneyimi sunan yerler");
-                
+
                 if (location) {
                     suggestions.push(`${location}'da ev yapımı mantı ve gözleme çeşitleri sunan Türk mutfağı restoranları`);
                     suggestions.push(`${location} bölgesinde özel pide ve lahmacun çeşitleri olan mekanlar`);
                 }
             }
-            
+
             return suggestions;
         }
-        
+
         // Diğer aramalar için genel öneriler
         return [
             `${input} (daha detaylı ve kapsamlı sonuçlar için)`,
@@ -267,26 +267,26 @@ export function VercelV0Chat() {
 
     const enhancePrompt = () => {
         if (!value.trim()) return;
-        
+
         setIsEnhancing(true);
         setShowAnimation(true);
         setAnimationStep(0);
-        
+
         // Promptu geliştir ve önerileri oluştur
         const suggestions = generateEnhancedSuggestions(value);
         setEnhancedSuggestions(suggestions);
-        
+
         // Animasyon adımlarını zamanlayıcılarla ilerlet
         setTimeout(() => {
             setAnimationStep(1);
-            
+
             setTimeout(() => {
                 setAnimationStep(2);
                 setIsEnhancing(false);
             }, 1500);
         }, 1000);
     };
-    
+
     const handleSuggestionSelect = (suggestion: string) => {
         setValue(suggestion);
         setShowAnimation(false);
@@ -297,7 +297,7 @@ export function VercelV0Chat() {
     const getAnimationPromptTips = () => {
         const lowerInput = value.toLowerCase();
         const promptTips = [];
-        
+
         if (lowerInput.includes("restoran") || lowerInput.includes("yemek")) {
             if (!lowerInput.includes("manzara") && !lowerInput.includes("atmosfer")) {
                 promptTips.push(`${value} (manzaralı ve romantik atmosfer ile)`);
@@ -334,7 +334,7 @@ export function VercelV0Chat() {
             promptTips.push(`${value} (kullanıcı yorumlarıyla desteklenmiş)`);
             promptTips.push(`${value} (fiyat ve kalite karşılaştırmalı)`);
         }
-        
+
         return promptTips;
     };
 
@@ -350,7 +350,7 @@ export function VercelV0Chat() {
                         Guide
                     </MovingBorderButton>
                 </div>
-                
+
                 {showAnimation && (
                     <motion.div 
                         ref={animationRef}
@@ -380,7 +380,7 @@ export function VercelV0Chat() {
                                     ✕
                                 </button>
                             </div>
-                            
+
                             <div className="relative">
                                 <AnimatePresence mode="wait">
                                     {animationStep === 0 && (
@@ -402,7 +402,7 @@ export function VercelV0Chat() {
                                             </div>
                                         </motion.div>
                                     )}
-                                    
+
                                     {animationStep === 1 && (
                                         <motion.div
                                             key="step1"
@@ -436,7 +436,7 @@ export function VercelV0Chat() {
                                             </div>
                                         </motion.div>
                                     )}
-                                    
+
                                     {animationStep === 2 && (
                                         <motion.div
                                             key="step2"
@@ -481,7 +481,7 @@ export function VercelV0Chat() {
                         </div>
                     </motion.div>
                 )}
-                
+
                 <div className="relative bg-[#fdf2e4] rounded-xl border border-[#f96815] transition-colors duration-200 hover:bg-[#fdf2e4]/90">
                     <div className="overflow-y-auto">
                         <Textarea
@@ -531,7 +531,7 @@ export function VercelV0Chat() {
                                 <span className="text-xs">Geliştir</span>
                             </button>
                         </div>
-                        
+
                         <button
                             type="button"
                             onClick={() => {
@@ -565,4 +565,4 @@ export function VercelV0Chat() {
             <GuideDialog open={showGuide} onOpenChange={setShowGuide} />
         </div>
     );
-} 
+}
