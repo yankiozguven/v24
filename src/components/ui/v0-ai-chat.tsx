@@ -549,12 +549,7 @@ export function VercelV0Chat() {
                             )}
                         >
                             <ArrowUpIcon
-                                className={cn(
-                                    "w-4 h-4",
-                                    value.trim()
-                                        ? "text-white"
-                                        : "text-black"
-                                )}
+                                className="w-4 h-4 text-black"
                             />
                             <span className="sr-only">Gönder</span>
                         </button>
