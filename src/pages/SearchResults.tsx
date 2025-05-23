@@ -99,7 +99,7 @@ function SearchResults() {
   const [showEnrichment, setShowEnrichment] = useState(false);
   const [badgeSearchQuery, setBadgeSearchQuery] = useState('');
   const filterRef = useRef<HTMLDivElement>(null);
-  const filterButtonRef = useRef<HTMLButtonElement>(null);
+  const filterButtonRef = useRef<HTMLDivElement>(null);
 
   // Dışarı tıklamayı dinlemek için useEffect
   useEffect(() => {
@@ -1286,9 +1286,12 @@ function SearchResults() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full">
+              <div 
+                onClick={() => navigate(-1)} 
+                className="p-2 hover:bg-gray-100 rounded-full cursor-pointer"
+              >
                 <ArrowLeft className="h-6 w-6" />
-              </button>
+              </div>
               <h1 className="text-2xl font-bold text-gray-900">"{searchQuery}"</h1>
             </div>
           </div>
@@ -1328,14 +1331,14 @@ function SearchResults() {
                         {restaurant.isControversial && (
                           <DropdownMenu.Root>
                             <DropdownMenu.Trigger asChild>
-                              <button 
-                                className="text-[#f96815] hover:text-[#f96815]/80 transition-colors ml-2"
+                              <div 
+                                className="text-[#f96815] hover:text-[#f96815]/80 transition-colors ml-2 cursor-pointer"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                 }}
                               >
                                 <Zap size={20} className="drop-shadow-md text-[#ff4500]" />
-                              </button>
+                              </div>
                             </DropdownMenu.Trigger>
                             <DropdownMenu.Portal>
                               <DropdownMenu.Content 
@@ -1359,9 +1362,9 @@ function SearchResults() {
                           </DropdownMenu.Root>
                         )}
                       </div>
-                      <button className="p-1 hover:bg-gray-100 rounded-full">
+                      <div className="p-1 hover:bg-gray-100 rounded-full cursor-pointer">
                         {expandedRestaurantId === restaurant.id ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-                      </button>
+                      </div>
                     </div>
 
                     <div className="flex flex-wrap gap-1 sm:gap-2">
@@ -1398,42 +1401,54 @@ function SearchResults() {
                                 className="flex border-b border-gray-200 overflow-x-auto no-scrollbar"
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                <Tabs.Trigger
-                                  value="gallery"
-                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap"
-                                  onClick={(e) => e.stopPropagation()}
+                                <div
+                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap cursor-pointer hover:text-[#f96815] hover:border-[#f96815]/50"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveTab("gallery");
+                                  }}
+                                  data-state={activeTab === "gallery" ? "active" : "inactive"}
                                 >
                                   <Image className="h-3 w-3 sm:h-4 sm:w-4" />
                                   <span className="hidden sm:inline">Galeri</span>
                                   <span className="sm:hidden">Foto</span>
-                                </Tabs.Trigger>
-                                <Tabs.Trigger
-                                  value="insider"
-                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap"
-                                  onClick={(e) => e.stopPropagation()}
+                                </div>
+                                <div
+                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap cursor-pointer hover:text-[#f96815] hover:border-[#f96815]/50"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveTab("insider");
+                                  }}
+                                  data-state={activeTab === "insider" ? "active" : "inactive"}
                                 >
                                   <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4" />
                                   <span className="hidden sm:inline">İçeriden Bilgi</span>
                                   <span className="sm:hidden">İpuçları</span>
-                                </Tabs.Trigger>
-                                <Tabs.Trigger
-                                  value="social"
-                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap"
-                                  onClick={(e) => e.stopPropagation()}
+                                </div>
+                                <div
+                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap cursor-pointer hover:text-[#f96815] hover:border-[#f96815]/50"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveTab("social");
+                                  }}
+                                  data-state={activeTab === "social" ? "active" : "inactive"}
                                 >
                                   <Instagram className="h-3 w-3 sm:h-4 sm:w-4" />
                                   <span className="hidden sm:inline">Spot Işığı</span>
                                   <span className="sm:hidden">Sosyal</span>
-                                </Tabs.Trigger>
-                                <Tabs.Trigger
-                                  value="reviews"
-                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap"
-                                  onClick={(e) => e.stopPropagation()}
+                                </div>
+                                <div
+                                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium border-b-2 transition-colors data-[state=active]:text-[#f96815] data-[state=active]:border-b-2 data-[state=active]:border-[#f96815] data-[state=inactive]:border-transparent whitespace-nowrap cursor-pointer hover:text-[#f96815] hover:border-[#f96815]/50"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveTab("reviews");
+                                  }}
+                                  data-state={activeTab === "reviews" ? "active" : "inactive"}
                                 >
                                   <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4" />
                                   <span className="hidden sm:inline">Yorumlar</span>
                                   <span className="sm:hidden">Yorum</span>
-                                </Tabs.Trigger>
+                                </div>
                               </Tabs.List>
 
                               <Tabs.Content 
@@ -1613,8 +1628,8 @@ function SearchResults() {
           >
             Garson Lütfen
           </div>
-          <button 
-            className="cursor-pointer flex items-center justify-center relative z-45"
+          <div 
+            className="cursor-pointer relative z-45"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             ref={filterButtonRef}
           >
@@ -1622,7 +1637,7 @@ function SearchResults() {
               animationData={filterAnimationData}
               style={{ width: '150px', height: '150px' }}
             />
-          </button>
+          </div>
           
           {/* Filtre Dropdown'u */}
           <AnimatePresence>
@@ -1641,20 +1656,20 @@ function SearchResults() {
                   </h3>
                   <div className="flex items-center gap-2">
                     {activeDropdownPage === 'enrichment' && (
-                      <button 
+                      <div 
                         onClick={() => setActiveDropdownPage('filters')}
-                        className="p-1 hover:bg-gray-100 rounded-full"
+                        className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
                       >
                         <ChevronLeft className="h-4 w-4" />
-                      </button>
+                      </div>
                     )}
                     {activeDropdownPage === 'filters' && (
-                      <button 
+                      <div 
                         onClick={() => setActiveDropdownPage('enrichment')}
-                        className="p-1 hover:bg-gray-100 rounded-full"
+                        className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
                       >
                         <ChevronRight className="h-4 w-4" />
-                      </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1758,8 +1773,8 @@ function SearchResults() {
                             className="flex items-start gap-2" 
                           >
                             <div className="bg-[#fdf2e4] rounded-xl p-2.5 flex-grow">
-                              <button 
-                                className="flex items-center justify-between w-full"
+                              <div 
+                                className="flex items-center justify-between w-full cursor-pointer"
                                 onClick={() => {
                                   // Burada seçilen öneriyi işleyebilirsiniz
                                   console.log(`Suggestion selected: ${suggestion}`);
@@ -1767,7 +1782,7 @@ function SearchResults() {
                               >
                                 <span className="text-xs text-[#1b100e]">{suggestion}</span>
                                 <ChevronRight className="h-3.5 w-3.5 text-[#f96815]" />
-                              </button>
+                              </div>
                             </div>
                           </motion.div>
                         ))}
@@ -1780,9 +1795,9 @@ function SearchResults() {
                             placeholder="Kendi sorunuzu yazın..."
                             className="w-full p-2 text-xs rounded-lg border border-[#e7d4d0] focus:outline-none focus:ring-1 focus:ring-[#f96815]"
                           />
-                          <button className="bg-[#f96815] p-2 rounded-lg flex items-center justify-center">
+                          <div className="bg-[#f96815] p-2 rounded-lg flex items-center justify-center cursor-pointer">
                             <ChevronRight className="h-4 w-4 text-white" />
-                          </button>
+                          </div>
                         </div>
                       </div>
                     </motion.div>

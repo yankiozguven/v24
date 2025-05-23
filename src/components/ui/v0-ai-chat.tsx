@@ -462,12 +462,12 @@ export function VercelV0Chat() {
                                                                     className="flex items-start gap-1.5"
                                                                 >
                                                                     <span className="text-[#f96815] mt-0.5">•</span>
-                                                                    <button
+                                                                    <p
                                                                         onClick={() => handleSuggestionSelect(suggestion)}
-                                                                        className="text-sm text-[#1b100e] text-left hover:text-[#f96815] transition-colors"
+                                                                        className="text-sm text-[#1b100e] text-left hover:text-[#f96815] transition-colors cursor-pointer"
                                                                     >
                                                                         {suggestion}
-                                                                    </button>
+                                                                    </p>
                                                                 </motion.li>
                                                             ))}
                                                         </ul>
@@ -517,16 +517,19 @@ export function VercelV0Chat() {
                                 onClick={enhancePrompt}
                                 disabled={isEnhancing || !value.trim()}
                                 className={cn(
-                                    "px-2 py-1.5 rounded-lg text-sm transition-colors border border-[#f96815] hover:border-[#f96815]/80 hover:bg-neutral-100 flex items-center justify-between gap-1",
+                                    "group px-2 py-1.5 rounded-lg text-sm transition-colors border flex items-center justify-between gap-1",
                                     value.trim() && !isEnhancing
-                                        ? "bg-[#fdf2e4] text-black"
-                                        : "bg-[#fdf2e4] text-black/50"
+                                        ? "bg-[#fdf2e4] text-black border-[#f96815] hover:border-[#f96815] hover:bg-[#f96815] hover:text-white"
+                                        : "bg-[#fdf2e4] text-black/50 border-[#f96815]/50"
                                 )}
                             >
                                 {isEnhancing ? (
                                     <div className="w-4 h-4 border-2 border-[#f96815] border-t-transparent rounded-full animate-spin" />
                                 ) : (
-                                    <Sparkles className="w-4 h-4" />
+                                    <Sparkles className={cn(
+                                        "w-4 h-4 transition-colors",
+                                        value.trim() ? "group-hover:text-white" : ""
+                                    )} />
                                 )}
                                 <span className="text-xs">Geliştir</span>
                             </button>
@@ -542,14 +545,18 @@ export function VercelV0Chat() {
                                 }
                             }}
                             className={cn(
-                                "px-1.5 py-1.5 rounded-lg text-sm transition-colors border border-[#f96815] hover:border-[#f96815]/80 hover:bg-[#f96815] flex items-center justify-between gap-1",
+                                "group px-1.5 py-1.5 rounded-lg text-sm transition-colors border border-[#f96815] hover:border-[#f96815] hover:bg-[#f96815] hover:text-white flex items-center justify-between gap-1",
                                 value.trim()
                                     ? "bg-[#fdf2e4] text-[#f96815]"
                                     : "bg-[#fdf2e4] text-black"
                             )}
                         >
                             <ArrowUpIcon
-                                className="w-4 h-4 text-black"
+                                className={cn(
+                                    "w-4 h-4 transition-colors", 
+                                    value.trim() ? "text-[#f96815]" : "text-black",
+                                    "group-hover:text-white"
+                                )}
                             />
                             <span className="sr-only">Gönder</span>
                         </button>

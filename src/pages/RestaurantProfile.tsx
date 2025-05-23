@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import * as Tabs from '@radix-ui/react-tabs';
 // @ts-ignore
@@ -78,6 +78,14 @@ function RestaurantProfile() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<{name: string; image: string; description: string} | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  
+  // images değişkeninin güncel değerine referans tutacak ref
+  const imagesRef = useRef<string[]>([]);
+  
+  // images değiştiğinde ref'i de güncelle
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
 
   // Mock data - in a real app, this would come from an API
   const restaurant: Restaurant = {
@@ -221,7 +229,7 @@ function RestaurantProfile() {
 
   useEffect(() => {
     setImages(restaurant.images);
-  }, [restaurant.images]);
+  }, []);
 
   const handlePrev = useCallback(() => {
     if (emblaApi) {
@@ -229,9 +237,9 @@ function RestaurantProfile() {
       const currentIndex = emblaApi.selectedScrollSnap();
       setSelectedIndex(currentIndex);
       setIsFirstImage(currentIndex === 0);
-      setIsLastImage(currentIndex === images.length - 1);
+      setIsLastImage(currentIndex === imagesRef.current.length - 1);
     }
-  }, [emblaApi, images.length]);
+  }, [emblaApi]);
 
   const handleNext = useCallback(() => {
     if (emblaApi) {
@@ -239,35 +247,32 @@ function RestaurantProfile() {
       const currentIndex = emblaApi.selectedScrollSnap();
       setSelectedIndex(currentIndex);
       setIsFirstImage(currentIndex === 0);
-      setIsLastImage(currentIndex === images.length - 1);
+      setIsLastImage(currentIndex === imagesRef.current.length - 1);
     }
-  }, [emblaApi, images.length]);
+  }, [emblaApi]);
 
   useEffect(() => {
     if (emblaApi) {
-      emblaApi.on('select', () => {
+      const onSelectHandler = () => {
         const currentIndex = emblaApi.selectedScrollSnap();
         setSelectedIndex(currentIndex);
         setIsFirstImage(currentIndex === 0);
-        setIsLastImage(currentIndex === images.length - 1);
-      });
+        setIsLastImage(currentIndex === imagesRef.current.length - 1);
+      };
+
+      emblaApi.on('select', onSelectHandler);
 
       // Cleanup
       return () => {
-        emblaApi.off('select', () => {
-          const currentIndex = emblaApi.selectedScrollSnap();
-          setSelectedIndex(currentIndex);
-          setIsFirstImage(currentIndex === 0);
-          setIsLastImage(currentIndex === images.length - 1);
-        });
+        emblaApi.off('select', onSelectHandler);
       };
     }
-  }, [emblaApi, images.length]);
+  }, [emblaApi]);
 
   useEffect(() => {
     setIsFirstImage(true); // Initialize to show only next arrow
-    setIsLastImage(images.length <= 1); // Hide next arrow if only one image
-  }, [images.length]);
+    setIsLastImage(imagesRef.current.length <= 1); // Hide next arrow if only one image
+  }, []);
 
   const badges = [
     {
@@ -494,43 +499,59 @@ function RestaurantProfile() {
           <Tabs.List className="flex border-b border-gray-200 mb-8" aria-label="Restoran Bilgileri">
             <Tabs.Trigger 
               value="reviews" 
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'reviews' 
-                  ? 'border-[#f96815] text-[#f96815]' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              asChild
             >
-              Yapay Zeka Analizi
+              <div 
+                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                  activeTab === 'reviews' 
+                    ? 'border-[#f96815] text-[#f96815]' 
+                    : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                }`}
+              >
+                Yapay Zeka Analizi
+              </div>
             </Tabs.Trigger>
             <Tabs.Trigger 
               value="insider" 
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'insider' 
-                  ? 'border-[#f96815] text-[#f96815]' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              asChild
             >
-              İçeriden Bilgi
+              <div 
+                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                  activeTab === 'insider' 
+                    ? 'border-[#f96815] text-[#f96815]' 
+                    : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                }`}
+              >
+                İçeriden Bilgi
+              </div>
             </Tabs.Trigger>
             <Tabs.Trigger 
               value="timeline" 
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'timeline' 
-                  ? 'border-[#f96815] text-[#f96815]' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              asChild
             >
-              Spot Işığı
+              <div 
+                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                  activeTab === 'timeline' 
+                    ? 'border-[#f96815] text-[#f96815]' 
+                    : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                }`}
+              >
+                Spot Işığı
+              </div>
             </Tabs.Trigger>
             <Tabs.Trigger 
               value="badges" 
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'badges' 
-                  ? 'border-[#f96815] text-[#f96815]' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              asChild
             >
-              Rozetler
+              <div 
+                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                  activeTab === 'badges' 
+                    ? 'border-[#f96815] text-[#f96815]' 
+                    : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                }`}
+              >
+                Rozetler
+              </div>
             </Tabs.Trigger>
           </Tabs.List>
 
@@ -541,33 +562,45 @@ function RestaurantProfile() {
                   <Tabs.List className="flex border-b border-gray-200" aria-label="Yapay Zeka Analizi Alt Sekmeleri">
                     <Tabs.Trigger 
                       value="expert-reviews" 
-                      className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                        activeSubTab === 'expert-reviews' 
-                          ? 'border-[#f96815] text-[#f96815]' 
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
+                      asChild
                     >
-                      Uzman Yorumu
+                      <div 
+                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                          activeSubTab === 'expert-reviews' 
+                            ? 'border-[#f96815] text-[#f96815]' 
+                            : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                        }`}
+                      >
+                        Uzman Yorumu
+                      </div>
                     </Tabs.Trigger>
                     <Tabs.Trigger 
                       value="highlights" 
-                      className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                        activeSubTab === 'highlights' 
-                          ? 'border-[#f96815] text-[#f96815]' 
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
+                      asChild
                     >
-                      Öne Çıkanlar
+                      <div 
+                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                          activeSubTab === 'highlights' 
+                            ? 'border-[#f96815] text-[#f96815]' 
+                            : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                        }`}
+                      >
+                        Öne Çıkanlar
+                      </div>
                     </Tabs.Trigger>
                     <Tabs.Trigger 
                       value="cautions" 
-                      className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                        activeSubTab === 'cautions' 
-                          ? 'border-[#f96815] text-[#f96815]' 
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
+                      asChild
                     >
-                      Dikkat Edilmesi Gerekenler
+                      <div 
+                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:text-[#f96815] ${
+                          activeSubTab === 'cautions' 
+                            ? 'border-[#f96815] text-[#f96815]' 
+                            : 'border-transparent text-gray-500 hover:text-[#f96815] hover:border-[#f96815]'
+                        }`}
+                      >
+                        Dikkat Edilmesi Gerekenler
+                      </div>
                     </Tabs.Trigger>
                   </Tabs.List>
 
@@ -1406,17 +1439,23 @@ function RestaurantProfile() {
                     Harika bir deneyimdi! Personel çok ilgiliydi, yemekler lezzetliydi. Özellikle şef masası deneyimini tavsiye ederim.
                   </p>
                   <div className="mt-3 flex items-center gap-4">
-                    <button className="text-sm text-gray-500 hover:text-[#f96815] transition-colors duration-200">
-                      Beğen
-                    </button>
-                    <button className="text-sm text-gray-500 hover:text-red-600 transition-colors duration-200 flex items-center gap-1">
+                    <div className="text-sm text-gray-500 hover:text-[#f96815] hover:scale-105 hover:font-medium transition-all duration-200 cursor-pointer group">
+                      <span className="relative inline-block group-hover:underline decoration-[#f96815] underline-offset-2">
+                        Beğen
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#f96815] group-hover:w-full transition-all duration-300"></span>
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-500 hover:text-red-600 hover:scale-105 hover:font-medium transition-all duration-200 flex items-center gap-1 cursor-pointer group">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M11 14h2"></path>
                         <path d="M11 7h2v4"></path>
                         <circle cx="12" cy="12" r="10"></circle>
                       </svg>
-                      Şikayet Et
-                    </button>
+                      <span className="relative inline-block group-hover:underline decoration-red-600 underline-offset-2">
+                        Şikayet Et
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1444,17 +1483,23 @@ function RestaurantProfile() {
                     Atmosfer çok güzeldi, yemekler lezzetliydi. Fiyatlar biraz yüksek ama kalite buna değer.
                   </p>
                   <div className="mt-3 flex items-center gap-4">
-                    <button className="text-sm text-gray-500 hover:text-[#f96815] transition-colors duration-200">
-                      Beğen
-                    </button>
-                    <button className="text-sm text-gray-500 hover:text-red-600 transition-colors duration-200 flex items-center gap-1">
+                    <div className="text-sm text-gray-500 hover:text-[#f96815] hover:scale-105 hover:font-medium transition-all duration-200 cursor-pointer group">
+                      <span className="relative inline-block group-hover:underline decoration-[#f96815] underline-offset-2">
+                        Beğen
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#f96815] group-hover:w-full transition-all duration-300"></span>
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-500 hover:text-red-600 hover:scale-105 hover:font-medium transition-all duration-200 flex items-center gap-1 cursor-pointer group">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M11 14h2"></path>
                         <path d="M11 7h2v4"></path>
                         <circle cx="12" cy="12" r="10"></circle>
                       </svg>
-                      Şikayet Et
-                    </button>
+                      <span className="relative inline-block group-hover:underline decoration-red-600 underline-offset-2">
+                        Şikayet Et
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
